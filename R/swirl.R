@@ -71,6 +71,8 @@ swirl <- function(resume.class="default", ...){
     # remains active
     return(resume(e, ...))
   }
+  print("registering a callback")
+  print(e)
   addTaskCallback(cb, name="mini")
   invisible()
 }
@@ -262,6 +264,7 @@ resume <- function(...)UseMethod("resume")
 
 resume.default <- function(e, ...){
   # Check that if running in test mode, all necessary args are specified
+  print(paste("resuming with", e$iptr))
   if(is(e, "test")) {
     # Capture ... args
     targs <- list(...)
@@ -429,7 +432,9 @@ resume.default <- function(e, ...){
   temp <- mainMenu(e)
   # If menu returns FALSE, the user wants to exit.
   if(is.logical(temp) && !isTRUE(temp)){
-    swirl_out("Leaving swirl now. Type swirl() to resume.", skip_after=TRUE)
+    #if (!is(e, "test")) {
+      swirl_out("Leaving swirl now. Type swirl() to resume.", skip_after=TRUE)
+    #}
     esc_flag <- FALSE # To supress double notification
     return(FALSE)
   }
@@ -455,8 +460,10 @@ resume.default <- function(e, ...){
     if(e$row > min(nrow(e$les), e$test_to)) {
       # If in test mode, we don't want to run another lesson
       if(is(e, "test")) {
-        swirl_out("Lesson complete! Exiting swirl now...",
-                  skip_after=TRUE)
+        if (!(notify_socratic_swirl(e))) {
+          swirl_out("Lesson complete! Exiting swirl now...",
+                    skip_after=TRUE)
+        }
         esc_flag <- FALSE # to supress double notification
         return(FALSE)
       }
@@ -512,7 +519,9 @@ resume.default <- function(e, ...){
     }
     
     # Execute the current instruction
+    print(paste("executing current instruction", e$iptr, e$prompt))
     e$instr[[e$iptr]](e$current.row, e)
+    print(paste("after executing instruction,", e$iptr, e$prompt))
     # Check if a side effect, such as a sourced file, has changed the
     # values of any variables in the official list. If so, add them
     # to the list of changed variables.

@@ -14,6 +14,7 @@ present.default <- function(current.row, e){
   if(!exists("attempts", e)) e$attempts <- 1
   # Increment pointer
   e$iptr <- 1 + e$iptr
+  # print(paste("end of present.default", e$iptr))
 }
 
 # All classes then wait for user response, in different ways, hence
@@ -98,6 +99,8 @@ waitUser.range_question <- function(current.row, e){
 
 waitUser.cmd_question <- function(current.row, e){
   # Indicate a return to the prompt is necessary.
+  # print("iterate")
+  # print(e$iptr)
   e$prompt <- TRUE
   e$iptr <- 1 + e$iptr
 }
@@ -151,6 +154,7 @@ waitUser.script <- function(current.row, e){
 testResponse <- function(current.row, e)UseMethod("testResponse")
 
 testResponse.default <- function(current.row, e){
+  # print("testing response")
   # Increment attempts counter
   e$attempts <- 1 + e$attempts
   # Get answer tests
@@ -172,6 +176,8 @@ testResponse.default <- function(current.row, e){
     # Reset attempts counter, since correct
     e$attempts <- 1
   } else {
+    notify_socratic_swirl(e, FALSE)
+    
     # Restore the previous global environment from the official
     # in case the user has garbled it, e.g., has typed x <- 3*x
     # instead of x <- 2*x by mistake. The hint might say to type
