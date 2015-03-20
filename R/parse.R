@@ -65,6 +65,11 @@ Parse_retrieve <- function(class_name, object_id, ...) {
   url <- paste("classes", class_name, sep = "/")
   
   # as of now, accepts only exact queries
-  q <- list(where = rjson::toJSON(list(...)))
+  params <- list(...)
+  if (length(params) > 0) {
+    q <- list(where = rjson::toJSON())
+  } else {
+    q <- NULL
+  }
   Parse_GET(url, query = q)
 }
