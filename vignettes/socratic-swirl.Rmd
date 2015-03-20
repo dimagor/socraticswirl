@@ -1,0 +1,115 @@
+---
+title: "Socratic Swirl"
+author: "Dima Gorenshteyn and David Robinson"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+SocraticSwirl is a *fork* of the Swirl software, released under the GPL-3 license. This package can be used exactly like Swirl, but it has additional features that allow students to take interactive exercises in class that update the instructor in real time.
+
+## For Students
+
+Your instructor will give you a line of code to run within your R terminal, which will register your SocraticSwirl session so that it knows what quiz you are taking and who your instructor is. It will look something like this:
+
+    library(socraticswirl)
+    socratic_swirl("ggplot2_exercises", instructor = "dgrtwo")
+
+After that, you can take any individual exercise, whenever the instructor prompts you, with a single line of R code. To take the first exercise in a session, do:
+
+    exercise(1)
+
+To take the sixth exercise, you would do:
+
+    exercise(6)
+
+It's that simple!
+
+### FAQs
+
+* **Are my answers submitted anonymously?** Yes! You are granted an anonymous ID, but there is no way for your instructor or anyone else to match it back to your name or any other identifying information.
+
+## For Instructors
+
+If you're an instructor, you can offer exercises from anyone else, but you probably want to offer your own in-class exercises. Here are simple instructions for setting up your own quiz within SocraticSwirl.
+
+### Create an account
+
+First, [go here](TODO) to create an instructor account and password. This keeps your own course data separate and private from any other instructors using SocraticSwirl.
+
+Then, register your R session. Place the following lines in your .Rprofile:
+
+    TODO
+
+### Creating Exercises
+
+Exercises are created in SocraticSwirl the same way they are created for Swirl. [Here](http://swirlstats.com/instructors.html) you can read in detail about creating interactive exercises using the "swirlify" tool. In short, quiz questions are structured like YAML files, in a form something like this:
+
+    - Class: cmd_question
+      Output: Now store the contents of the 'cars$mpgCity' in a new variable called 'myMPG'.
+      CorrectAnswer: myMPG <- cars$mpgCity
+      AnswerTests: newcmd=myMPG <- cars$mpgCity
+      Hint: Use the assignment operator to assign 'cars$mpgCity' to a new variable called
+        'myMPG'.
+
+Alternatively you could write a multiple choice question:
+
+    - Class: mult_question
+      Output: Mean, median, and mode are all measures of ____________.
+      AnswerChoices: variation; significance; deviation; central tendency
+      CorrectAnswer: central tendency
+      AnswerTests: word=central tendency
+      Hint: This is a fancy term for the "middle" of a dataset.
+
+**Note**: in regular Swirl, questions are usually interspersed with text paragraphs and demonstrations. This is probably not the right approach for a set of SocraticSwirl exercises: instead, make each of your items a question (either multiple choice or command-based).
+
+### Metadata
+
+Besides the quiz questions, each .yaml file starts with a metadata block:
+
+- Class: meta
+  Course: default
+  Lesson: ggplot2 exercises
+  Author: David Robinson
+  Type: SocraticSwirl
+  Organization: Princeton University
+  Version: 1.0.0
+
+Two customizations to make:
+
+* Under Course, you have two choices: you can name your course, or you can simply leave `default`. If "default", your students can install and take your class using just the lesson name (Note, however, that each lesson name will have to be unique among all users).
+* Under **Type**, put **SocraticSwirl**.
+
+### Uploading your exercises
+
+Now you've created a series of exercises in the file `ggplot2_exercises.yaml`. You can upload it to the SocraticSwirl service using:
+
+    upload_exercises("ggplot2_exercises.yaml")
+
+You'll now see it on the [Your Exercises](TODO) page.
+
+### Giving exercises to your students
+
+The `Lesson` line in your `.yaml` file defines a lesson name for your exercises. Give that line to your students. *Also* provide your instructor username, which allows you to view the results.
+
+    socratic_swirl("ggplot2_exercises", instructor = "dgrtwo")
+
+Then to view the results in real-time, simply go to [this page](TODO) and enter your instructor username and password.
+
+### FAQs
+
+* **What if I have custom tests or lesson initialization**? If so, place them in a directory with the structure:
+
+    ggplot2_exercises/
+        lesson.yaml
+        customTests.R
+        initLesson.R
+        
+And provide a path to this directory as the argument:
+
+    upload_exercises("ggplot2_exercises")
+
+* **How can I update the questions in an exercise?** First increment the version number in your *meta* block, e.g. to `Version: 1.0.1`. Then run the `upload_exercises` line with your new version. The questions in your lesson will be updated.

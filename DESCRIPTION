@@ -13,9 +13,9 @@ Authors@R: c(
     person("Gina", "Grdina", role = "aut"),
     person("Sean", "Kross", role = "aut")
     )
-Depends:
+Depends: 
     R (>= 3.0.2)
-Imports:
+Imports: 
     stringr,
     testthat,
     httr,
@@ -24,3 +24,5 @@ Imports:
     digest,
     tools
 Roxygen: list(wrap = FALSE)
+Suggests: knitr
+VignetteBuilder: knitr

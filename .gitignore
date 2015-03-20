@@ -4,3 +4,4 @@
 swirl.Rproj
 *.html
 .DS_Store
+inst/doc
