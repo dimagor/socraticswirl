@@ -58,11 +58,13 @@ Parse_create <- function(class_name, ...) {
 #'
 #' @param class_name
 #' @param object_id if provided, a specific object ID to retrieve
-#' @param ... fields to query by (not yet implemented)
+#' @param ... fields to query by
 #'
 #' @export
 Parse_retrieve <- function(class_name, object_id, ...) {
   url <- paste("classes", class_name, sep = "/")
-  Parse_GET(url)
+  
+  # as of now, accepts only exact queries
+  q <- list(where = rjson::toJSON(list(...)))
+  Parse_GET(url, query = q)
 }
-
