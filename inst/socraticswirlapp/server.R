@@ -8,8 +8,24 @@ shinyServer(function(input, output, session) {
   attempts <- reactive({
     # todo: filter for lesson, instructor, and today
     autoInvalidate()
-    Parse_retrieve("Answer")
+    Parse_retrieve("adb_dima") %>% group_by()
   })
+  users <- reactive({
+    # todo: filter for lesson, instructor, and today
+    autoInvalidate()
+    Parse_retrieve("udb_dima") %>% group_by()
+  })
+  
+  output$sessions_started <- renderText({
+    udb <- users()
+    length(unique(udb$student))
+  })
+  
+  output$incorrect_answers <- renderDataTable({
+    adb <- attempts()
+    # adb %>% filter(!correct) %>% select(answer) %>% count(answer) %>% data.table
+    adb
+  }) 
   
   output$bar_plot <- renderPlot({
     a <- attempts()
