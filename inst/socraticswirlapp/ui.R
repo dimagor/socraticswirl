@@ -9,8 +9,9 @@ sidebar <- dashboardSidebar(
       uiOutput("usersessions")),
   
   sidebarMenu(
-    menuItem("Exercise Dashboard", tabName = "exercise"),
-    menuItem("Lesson Overview", tabName = "overview", icon = icon("dashboard"))
+    menuItem("Exercise Dashboard", tabName = "exercise", icon = icon("dashboard")),
+    menuItem("Lesson Overview", tabName = "overview", icon = icon("list")),
+    menuItem("Submitted Questions", tabName = "studentquestions", icon = icon("question-circle"))
   ),
   
   p(), #Fix for better separation
@@ -35,14 +36,28 @@ body <- dashboardBody(
   tabItems(
     tabItem(tabName = "exercise",
             fluidRow(
-                     box(uiOutput("selectExercise")),
-                     valueBoxOutput("attemptedBox"),
-                     valueBoxOutput("completedBox")
-                     # % attempted, % complete
+              column(width = 7,
+                     box(width = NULL, uiOutput("selectExercise")),
+                     box(collapsible = TRUE, width = NULL, title = "Question:",
+                         verbatimTextOutput("exerciseQuestion"),
+                         verbatimTextOutput("exerciseAnswer")),
+                     box(collapsible = TRUE, width = NULL, title = "Student Attempts",
+                         plotOutput("attemptBreakdown"))
+                     ),
+              column(width = 5,
+                     box(width = NULL, uiOutput("attemptedBar", style = "list-style-type: none;"),
+                         uiOutput("completedBar", style = "list-style-type: none;")),
+                     box(width = NULL,
+                         tableOutput("incorrectAnswers"))
               )
+            ) 
             #Plot switch, Table of answers
-            ),
+    ),
+    
     tabItem(tabName = "overview",
+            h2("Dashboard tab content")
+    ),
+    tabItem(tabName = "studentquestion",
             h2("Dashboard tab content")
     )
     )

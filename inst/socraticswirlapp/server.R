@@ -1,6 +1,7 @@
 library(shiny)
 library(dplyr)
 library(ggplot2)
+library(swirl)
 
 shinyServer(function(input, output, session) {
   
@@ -77,24 +78,39 @@ shinyServer(function(input, output, session) {
     exercises = as.list(lectureInfo$exercise)
     selectInput("exerciseID", "Select Exercise:", exercises, selected = "1")
   })
-  
-  output$attemptedBox <- renderValueBox({
+  output$attemptedBar <- renderUI({
     attempted = selectedExercise() %>% distinct(student) %>% nrow
+    #FIX: Error in eval(substitute(expr), envir, enclos) : incorrect length (0), expecting: 38,
     attempted_pct = round(attempted/usersLogged() * 100)
-    valueBox(
-      paste0(as.character(attempted_pct), "%"), "Attempted", icon = icon("bars"),
-      color = getPctColor(attempted_pct)
-    )
+    taskItem(paste("Attempted:", attempted) , value = attempted_pct, color = getPctColor(attempted_pct))
   })
-  output$completedBox <- renderValueBox({
+  
+  output$completedBar <- renderUI({
     completed = selectedExercise() %>% filter(correct) %>% distinct(student) %>% nrow
     completed_pct = round(completed/usersLogged() * 100)
-    valueBox(
-      paste0(as.character(completed_pct), "%"), "Progress", icon = icon("thumbs-up", lib = "glyphicon"),
-      color = getPctColor(completed_pct)
-    )
+    taskItem(paste("Completed:", completed) , value = completed_pct, color = getPctColor(completed_pct))
   })
   
- 
+  output$exerciseQuestion <- renderText(
+    lectureInfo %>% filter(exercise == input$exerciseID) %>% .$description
+  )
+  
+  output$exerciseAnswer <- renderText(
+    lectureInfo %>% filter(exercise == input$exerciseID) %>% .$desired_answer
+  )
+  
+  output$incorrectAnswers <- renderTable(
+    selectedExercise() %>% filter(!correct) %>% count(Answer=answer) %>% arrange(-n)
+  )
+  
+  #TODO: Fun placeholder, make something sensible
+  #NOTES: add switch dropdown for multiple plots, or consider gridextra
+  output$attemptBreakdown <- renderPlot(
+    selectedExercise() %>% count(student) %>%
+      ggplot(aes(x = "", fill = factor(n))) + 
+      geom_bar(width = 1) + 
+      coord_polar(theta = "y") + 
+      theme_minimal() + xlab("") + ylab("") 
+  )
   
 })
