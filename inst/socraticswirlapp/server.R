@@ -114,7 +114,10 @@ shinyServer(function(input, output, session) {
                ggplot(aes(x = attempts, y = n, fill = attempts)) + 
                geom_bar(stat = "identity") + 
                coord_flip() +
-               theme_classic() + xlab("Attempts") + ylab("Frequency") + guides(fill = FALSE)
+               theme_classic() + 
+               xlab("Attempts") + ylab("Frequency") + 
+               guides(fill = FALSE) +
+               scale_fill_brewer()
       )
     }
     

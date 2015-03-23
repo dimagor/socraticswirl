@@ -41,7 +41,7 @@ process_Parse <- function(req) {
   
   for (col in names(j)) {
     if (grepl("At$", col)) {
-      j[[col]] <- as.POSIXct(j[[col]], origin = "1970-01-01")
+      j[[col]] <- as.POSIXct(j[[col]], origin = "1970-01-01", format="%Y-%m-%dT%H:%M:%S")
     }
   }
   
