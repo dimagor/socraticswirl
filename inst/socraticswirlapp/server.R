@@ -55,7 +55,6 @@ shinyServer(function(input, output, session) {
     
     dropdownMenu(type = "tasks", .list = progress_msgs)
   })
-  
   # Sidebar --------------
   output$usersessions <- renderUI({
     h3("Sessions:", as.character(usersLogged()))
@@ -99,18 +98,26 @@ shinyServer(function(input, output, session) {
     lectureInfo %>% filter(exercise == input$exerciseID) %>% .$desired_answer
   )
   
-  output$incorrectAnswers <- renderTable(
+  output$incorrectAnswers <- renderDataTable(
     selectedExercise() %>% filter(!correct) %>% count(Answer=answer) %>% arrange(-n)
   )
   
   #TODO: Fun placeholder, make something sensible
   #NOTES: add switch dropdown for multiple plots, or consider gridextra
-  output$attemptBreakdown <- renderPlot(
-    selectedExercise() %>% count(student) %>%
-      ggplot(aes(x = "", fill = factor(n))) + 
-      geom_bar(width = 1) + 
-      coord_polar(theta = "y") + 
-      theme_minimal() + xlab("") + ylab("") 
-  )
+  output$exerciseGraph <- renderPlot({
+    exercise_data <- selectedExercise()
+    if(nrow(exercise_data)==0) NULL
+    else{
+      switch(input$exerciseGraphSelect,
+             "attemptbar" = selectedExercise() %>% count(student) %>%
+               count(attempts=factor(n)) %>%
+               ggplot(aes(x = attempts, y = n, fill = attempts)) + 
+               geom_bar(stat = "identity") + 
+               coord_flip() +
+               theme_classic() + xlab("Attempts") + ylab("Frequency") + guides(fill = FALSE)
+      )
+    }
+    
+  })
   
 })

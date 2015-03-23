@@ -13,7 +13,6 @@ sidebar <- dashboardSidebar(
     menuItem("Lesson Overview", tabName = "overview", icon = icon("list")),
     menuItem("Submitted Questions", tabName = "studentquestions", icon = icon("question-circle"))
   ),
-  
   p(), #Fix for better separation
   
   box(
@@ -36,22 +35,36 @@ body <- dashboardBody(
   tabItems(
     tabItem(tabName = "exercise",
             fluidRow(
+              
+              # Left Column
               column(width = 7,
+                     # Exercise Selector
                      box(width = NULL, uiOutput("selectExercise")),
+                     
+                     # Question Info
                      box(collapsible = TRUE, width = NULL, title = "Question:",
                          verbatimTextOutput("exerciseQuestion"),
                          verbatimTextOutput("exerciseAnswer")),
+                     
+                     # Plots
                      box(collapsible = TRUE, width = NULL, title = "Student Attempts",
-                         plotOutput("attemptBreakdown"))
+                         selectInput("exerciseGraphSelect", label = NULL, 
+                                     choices = c("Attempt Frequency" = "attemptbar")),
+                         plotOutput("exerciseGraph"))
                      ),
+              
+              # Right Column
               column(width = 5,
+                     # Progres Bars
                      box(width = NULL, uiOutput("attemptedBar", style = "list-style-type: none;"),
                          uiOutput("completedBar", style = "list-style-type: none;")),
+                     
+                     # TODO: Capture Filter/Sort and use as input for tableoutput to preserve post refresh
+                     # Answer Table
                      box(width = NULL,
-                         tableOutput("incorrectAnswers"))
+                         dataTableOutput("incorrectAnswers"))
               )
             ) 
-            #Plot switch, Table of answers
     ),
     
     tabItem(tabName = "overview",
