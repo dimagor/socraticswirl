@@ -80,8 +80,8 @@ socratic_swirl_error <- function() {
                       instructor = opts$instructor,
                       correct = FALSE,
                       response = response,
-                      error = TRUE,
-                      errormessage = err_message)
+                      isError = TRUE,
+                      errorMessage = err_message)
 }
 
 
