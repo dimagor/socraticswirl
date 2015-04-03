@@ -67,7 +67,7 @@ Parse_retrieve <- function(class_name, object_id, ...) {
   # as of now, accepts only exact queries
   params <- list(...)
   if (length(params) > 0) {
-    q <- list(where = rjson::toJSON())
+    q <- list(where = rjson::toJSON(params))
   } else {
     q <- NULL
   }
