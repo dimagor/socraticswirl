@@ -4,7 +4,7 @@
 \alias{socratic_swirl}
 \title{set up SocraticSwirl in this session}
 \usage{
-socratic_swirl(lesson, instructor, course = "none", ...)
+socratic_swirl(lesson, instructor, course = "default", ...)
 }
 \arguments{
 \item{lesson}{lesson name}

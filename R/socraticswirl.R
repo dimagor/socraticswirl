@@ -37,7 +37,7 @@ socratic_swirl_options <- function(error = TRUE) {
 #' @param ... extra arguments, not yet used
 #' 
 #' @export
-socratic_swirl <- function(lesson, instructor, course = "none", ...) {
+socratic_swirl <- function(lesson, instructor, course = "default", ...) {
   # check if it is installed
   course_name <- stringr::str_replace_all(course, " ", "_")
 
@@ -55,7 +55,35 @@ socratic_swirl <- function(lesson, instructor, course = "none", ...) {
   # set course and lesson name options
   options(socratic_swirl_course = course, socratic_swirl_lesson = lesson,
           socratic_swirl_instructor = instructor)
+  
+  # set up error function
+  options(error = socratic_swirl_error)
 }
+
+
+#' Function called after an error during a SocraticSwirl attempt
+socratic_swirl_error <- function() {
+  err_message <- geterrmessage()
+  
+  # save, read, then delete a history
+  savehistory(file = ".hist")
+  response <- stringr::str_trim(tail(readLines(".hist"), 1))
+  unlink(".hist")
+  
+  opts <- socratic_swirl_options()
+  exercise <- getOption("socratic_swirl_exercise")
+  
+  ret <- Parse_create("Answer",
+                      course = opts$course,
+                      lesson = opts$lesson,
+                      exercise = exercise,
+                      instructor = opts$instructor,
+                      correct = FALSE,
+                      response = response,
+                      error = TRUE,
+                      errormessage = err_message)
+}
+
 
 
 #' Take an instructor-provided exercise with SocraticSwirl
@@ -63,17 +91,19 @@ socratic_swirl <- function(lesson, instructor, course = "none", ...) {
 #' This is to be called after \link{\code{socratic_swirl}} is used to set up
 #' a SocraticSwirl session.
 #' 
-#' @param question Which quiz question to take; provided by instructor
+#' @param exercise Which quiz exercise to take; provided by instructor
 #' 
 #' @export
-exercise <- function(question) {
+exercise <- function(exercise) {
   opts <- socratic_swirl_options()
+  
+  options(socratic_swirl_exercise = exercise)
 
   swirl("test",
         test_course = opts$course,
         test_lesson = opts$lesson,
-        from = question,
-        to = question + .5)
+        from = exercise,
+        to = exercise + .5)
 }
 
 #' Given a Swirl environment, update SocraticSwirl server

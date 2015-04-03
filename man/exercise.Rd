@@ -4,10 +4,10 @@
 \alias{exercise}
 \title{Take an instructor-provided exercise with SocraticSwirl}
 \usage{
-exercise(question)
+exercise(exercise)
 }
 \arguments{
-\item{question}{Which quiz question to take; provided by instructor}
+\item{exercise}{Which quiz exercise to take; provided by instructor}
 }
 \description{
 This is to be called after \link{\code{socratic_swirl}} is used to set up

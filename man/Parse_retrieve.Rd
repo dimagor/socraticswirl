@@ -11,7 +11,7 @@ Parse_retrieve(class_name, object_id, ...)
 
 \item{object_id}{if provided, a specific object ID to retrieve}
 
-\item{...}{fields to query by (not yet implemented)}
+\item{...}{fields to query by}
 }
 \description{
 retrieve one or more objects from Parse

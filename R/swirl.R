@@ -71,8 +71,8 @@ swirl <- function(resume.class="default", ...){
     # remains active
     return(resume(e, ...))
   }
-  print("registering a callback")
-  print(e)
+  # print("registering a callback")
+  # print(e)
   addTaskCallback(cb, name="mini")
   invisible()
 }
@@ -98,6 +98,10 @@ swirl <- function(resume.class="default", ...){
 #' }
 bye <- function(){
   removeTaskCallback("mini")
+  
+  # no more socratic swirl error function
+  options(error = NULL)
+  
   swirl_out("Leaving swirl now. Type swirl() to resume.", skip_after=TRUE)
   invisible()
 }
@@ -264,7 +268,7 @@ resume <- function(...)UseMethod("resume")
 
 resume.default <- function(e, ...){
   # Check that if running in test mode, all necessary args are specified
-  print(paste("resuming with", e$iptr))
+  # print(paste("resuming with", e$iptr))
   if(is(e, "test")) {
     # Capture ... args
     targs <- list(...)
@@ -463,6 +467,9 @@ resume.default <- function(e, ...){
         if (!(notify_socratic_swirl(e))) {
           swirl_out("Lesson complete! Exiting swirl now...",
                     skip_after=TRUE)
+        } else {
+          # get rid of socratic swirl error function
+          options(error = NULL)
         }
         esc_flag <- FALSE # to supress double notification
         return(FALSE)
@@ -519,9 +526,9 @@ resume.default <- function(e, ...){
     }
     
     # Execute the current instruction
-    print(paste("executing current instruction", e$iptr, e$prompt))
+    # print(paste("executing current instruction", e$iptr, e$prompt))
     e$instr[[e$iptr]](e$current.row, e)
-    print(paste("after executing instruction,", e$iptr, e$prompt))
+    # print(paste("after executing instruction,", e$iptr, e$prompt))
     # Check if a side effect, such as a sourced file, has changed the
     # values of any variables in the official list. If so, add them
     # to the list of changed variables.
