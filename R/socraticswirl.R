@@ -88,7 +88,7 @@ socratic_swirl_error <- function() {
 
 #' Take an instructor-provided exercise with SocraticSwirl
 #' 
-#' This is to be called after \link{\code{socratic_swirl}} is used to set up
+#' This is to be called after \code{\link{socratic_swirl}} is used to set up
 #' a SocraticSwirl session.
 #' 
 #' @param exercise Which quiz exercise to take; provided by instructor
