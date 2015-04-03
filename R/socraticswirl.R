@@ -13,6 +13,7 @@ socratic_swirl_options <- function(error = TRUE) {
   course <- getOption("socratic_swirl_course")
   lesson <- getOption("socratic_swirl_lesson")
   instructor <- getOption("socratic_swirl_instructor")
+  student <- digest::digest(Sys.info())
   
   if (is.null(course) || is.null(lesson) || is.null(instructor)) {
     if (!error) {
@@ -22,7 +23,8 @@ socratic_swirl_options <- function(error = TRUE) {
          "socratic_swirl?")
   }
   
-  return(list(course = course, lesson = lesson, instructor = instructor))
+  return(list(course = course, lesson = lesson, instructor = instructor,
+              student = student))
 }
 
 
@@ -44,14 +46,9 @@ socratic_swirl <- function(lesson, instructor, course = "default", ...) {
   installed_courses <- list.files(swirl:::courseDir.default())
   installed <- course_name %in% installed_courses
   
-  if (!installed) {
-    # install
-    message("Course ", course, " not installed; downloading and installing")
-    # TODO: install from things besides github
-    stop("Installation from backend not yet implemented")
-    # install_course_github(github_username, course_name, ...)
-  }
-  
+  message("Installing course ", course)
+  install_course_socratic_swirl(course)
+
   # set course and lesson name options
   options(socratic_swirl_course = course, socratic_swirl_lesson = lesson,
           socratic_swirl_instructor = instructor)
@@ -67,21 +64,22 @@ socratic_swirl_error <- function() {
   
   # save, read, then delete a history
   savehistory(file = ".hist")
-  response <- stringr::str_trim(tail(readLines(".hist"), 1))
+  command <- stringr::str_trim(tail(readLines(".hist"), 1))
   unlink(".hist")
   
   opts <- socratic_swirl_options()
   exercise <- getOption("socratic_swirl_exercise")
   
-  ret <- Parse_create("Answer",
+  ret <- Parse_create("StudentResponse",
                       course = opts$course,
                       lesson = opts$lesson,
                       exercise = exercise,
                       instructor = opts$instructor,
-                      correct = FALSE,
-                      response = response,
+                      isCorrect = FALSE,
+                      command = command,
                       isError = TRUE,
-                      errorMessage = err_message)
+                      errorMsg = err_message,
+                      student = opts$student)
 }
 
 
@@ -120,13 +118,15 @@ notify_socratic_swirl <- function(e, correct = TRUE) {
   }
   
   answer <- paste(str_trim(deparse(e$expr)), collapse = " ")
-  ret <- Parse_create("Answer",
+  ret <- Parse_create("StudentResponse",
                       course = e$test_course,
                       lesson = e$test_lesson,
                       exercise = e$test_from,  # index of question
                       instructor = o$instructor,
-                      correct = correct,
-                      answer = answer)
+                      isCorrect = correct,
+                      isError = FALSE,
+                      command = answer,
+                      student = o$student)
   
   # TODO: check that there wasn't an error communicating with the server
   TRUE
@@ -150,18 +150,25 @@ socratic_swirl_console <- function(lesson, course = "none") {
 }
 
 
-#' For an instructor; upload exercises to the SocraticSwirl database
-#' 
-#' @param input Either a single .yaml file, or a directory containing...
-#' 
+#' install a course from the Socratic Swirl server
+#'
+#' Given the title of a course, install it from the server
+#'
+#' @param course Course title
+#'
 #' @export
-upload_exercises <- function(input) {
-  # input file and directory are treated differently
-  if (file.info(input)$isdir) {
-    # a directory with multiple files
+install_course_socratic_swirl <- function(course) {
+  # retrieve course
+  course <- stringr::str_replace_all(course, " ", "_")
+
+  co <- Parse_retrieve("Course", title = course)
+  
+  if (length(co) == 0) {
+    stop("No course with title ", course, " found")
   }
-  else {
-    # a single YAML file
-  }
+  
+  # get the first one (TODO: there should never be redundant)
+  url <- co$zipfile$url[1]
+  install_course_url(url)
 }
 
