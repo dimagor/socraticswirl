@@ -4,14 +4,14 @@
 \alias{socratic_swirl}
 \title{set up SocraticSwirl in this session}
 \usage{
-socratic_swirl(lesson, instructor, course = "default", ...)
+socratic_swirl(lesson, course = "default", instructor, ...)
 }
 \arguments{
 \item{lesson}{lesson name}
 
-\item{instructor}{instructor's name}
-
 \item{course}{course name, default \code{"none"}}
+
+\item{instructor}{instructor's name}
 
 \item{...}{extra arguments, not yet used}
 }

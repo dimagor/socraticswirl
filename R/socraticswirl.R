@@ -27,6 +27,21 @@ socratic_swirl_options <- function(error = TRUE) {
               student = student))
 }
 
+#' Create an ACL (Access Control List) object for instructor-only objects
+#' 
+#' Create an ACL preventing anyone but the instructor from seeing the student's
+#' response.
+socratic_swirl_acl <- function() {
+  ID <- getOption("socratic_swirl_instructor_id")
+  if (is.null(ID)) {
+    stop("SocraticSwirl instructor not set")
+  }
+  ret <- list()
+  ret[[ID]] <- list(read = TRUE)
+  ret
+}
+
+
 
 #' set up SocraticSwirl in this session
 #' 
@@ -39,19 +54,21 @@ socratic_swirl_options <- function(error = TRUE) {
 #' @param ... extra arguments, not yet used
 #' 
 #' @export
-socratic_swirl <- function(lesson, instructor, course = "default", ...) {
-  # check if it is installed
-  course_name <- stringr::str_replace_all(course, " ", "_")
-
-  installed_courses <- list.files(swirl:::courseDir.default())
-  installed <- course_name %in% installed_courses
+socratic_swirl <- function(lesson, course = "default", instructor, ...) {
+  # check the instructor
+  instructor_user <- parse_query("_User", username = instructor)
+  if (is.null(instructor_user)) {
+    stop("Instructor ", instructor, " not found")
+  }
   
+  # course_name <- stringr::str_replace_all(course, " ", "_")
   message("Installing course ", course)
   install_course_socratic_swirl(course)
 
   # set course and lesson name options
   options(socratic_swirl_course = course, socratic_swirl_lesson = lesson,
-          socratic_swirl_instructor = instructor)
+          socratic_swirl_instructor = instructor,
+          socratic_swirl_instructor_id = instructor_user$objectId)
   
   # set up error function
   options(error = socratic_swirl_error)
@@ -79,7 +96,8 @@ socratic_swirl_error <- function() {
                       command = command,
                       isError = TRUE,
                       errorMsg = err_message,
-                      student = opts$student)
+                      student = opts$student,
+                      ACL = socratic_swirl_acl())
 }
 
 
@@ -116,7 +134,7 @@ notify_socratic_swirl <- function(e, correct = TRUE) {
     # no socratic swirl set up
     return(FALSE)
   }
-  
+
   answer <- paste(str_trim(deparse(e$expr)), collapse = " ")
   ret <- parse_object("StudentResponse",
                       course = e$test_course,
@@ -126,27 +144,11 @@ notify_socratic_swirl <- function(e, correct = TRUE) {
                       isCorrect = correct,
                       isError = FALSE,
                       command = answer,
-                      student = o$student)
+                      student = o$student,
+                      ACL = socratic_swirl_acl())
   
   # TODO: check that there wasn't an error communicating with the server
   TRUE
-}
-
-
-### instructor functions
-
-#' start up an instructor window
-#' 
-#' Start an instructor window in a Shiny app.
-#' 
-#' 
-#' 
-#' @export
-socratic_swirl_console <- function(lesson, course = "none") {
-  # TODO: error handling
-  options(socratic_swirl_course = course,
-          socratic_swirl_lesson = lesson)
-  shiny::runApp(system.file("socraticswirlapp", package = "swirl"))
 }
 
 

@@ -10,7 +10,7 @@ exercise(exercise)
 \item{exercise}{Which quiz exercise to take; provided by instructor}
 }
 \description{
-This is to be called after \link{\code{socratic_swirl}} is used to set up
+This is to be called after \code{\link{socratic_swirl}} is used to set up
 a SocraticSwirl session.
 }
 
