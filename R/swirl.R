@@ -268,7 +268,6 @@ resume <- function(...)UseMethod("resume")
 
 resume.default <- function(e, ...){
   # Check that if running in test mode, all necessary args are specified
-  # print(paste("resuming with", e$iptr))
   if(is(e, "test")) {
     # Capture ... args
     targs <- list(...)
@@ -453,7 +452,8 @@ resume.default <- function(e, ...){
        !uses_func("swirlify")(e$expr)[[1]] &&
        !uses_func("testit")(e$expr)[[1]] &&
        !uses_func("nxt")(e$expr)[[1]] &&
-       isTRUE(customTests$AUTO_DETECT_NEWVAR)) {
+       !uses_func("exercise")(e$expr)[[1]] &&
+     isTRUE(customTests$AUTO_DETECT_NEWVAR)) {
     e$delta <- mergeLists(safeEval(e$expr, e), e$delta)
   }
   # Execute instructions until a return to the prompt is necessary
@@ -526,9 +526,7 @@ resume.default <- function(e, ...){
     }
     
     # Execute the current instruction
-    # print(paste("executing current instruction", e$iptr, e$prompt))
     e$instr[[e$iptr]](e$current.row, e)
-    # print(paste("after executing instruction,", e$iptr, e$prompt))
     # Check if a side effect, such as a sourced file, has changed the
     # values of any variables in the official list. If so, add them
     # to the list of changed variables.
