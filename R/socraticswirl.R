@@ -70,7 +70,7 @@ socratic_swirl_error <- function() {
   opts <- socratic_swirl_options()
   exercise <- getOption("socratic_swirl_exercise")
   
-  ret <- Parse_create("StudentResponse",
+  ret <- parse_object("StudentResponse",
                       course = opts$course,
                       lesson = opts$lesson,
                       exercise = exercise,
@@ -118,7 +118,7 @@ notify_socratic_swirl <- function(e, correct = TRUE) {
   }
   
   answer <- paste(str_trim(deparse(e$expr)), collapse = " ")
-  ret <- Parse_create("StudentResponse",
+  ret <- parse_object("StudentResponse",
                       course = e$test_course,
                       lesson = e$test_lesson,
                       exercise = e$test_from,  # index of question
@@ -161,14 +161,13 @@ install_course_socratic_swirl <- function(course) {
   # retrieve course
   course <- stringr::str_replace_all(course, " ", "_")
 
-  co <- Parse_retrieve("Course", title = course)
+  co <- parse_query("Course", title = course)
   
   if (length(co) == 0) {
     stop("No course with title ", course, " found")
   }
   
-  # get the first one (TODO: there should never be redundant)
-  url <- co$zipfile$url[1]
-  install_course_url(url)
+  # get the first one (there should never be redundant; but just in case)
+  install_course_url(co$zipfile$url[1])
 }
 
