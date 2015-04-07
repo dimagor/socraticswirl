@@ -13,6 +13,7 @@ socratic_swirl_options <- function(error = TRUE) {
   course <- getOption("socratic_swirl_course")
   lesson <- getOption("socratic_swirl_lesson")
   instructor <- getOption("socratic_swirl_instructor")
+  exercise <- getOption("socratic_swirl_exercise")
   student <- digest::digest(Sys.info())
   
   if (is.null(course) || is.null(lesson) || is.null(instructor)) {
@@ -24,7 +25,7 @@ socratic_swirl_options <- function(error = TRUE) {
   }
   
   return(list(course = course, lesson = lesson, instructor = instructor,
-              student = student))
+              student = student, exercise = exercise))
 }
 
 #' Create an ACL (Access Control List) object for instructor-only objects
@@ -53,6 +54,8 @@ socratic_swirl_acl <- function() {
 #' @param course course name, default \code{"none"}
 #' @param ... extra arguments, not yet used
 #' 
+#' @import rparse
+#' 
 #' @export
 socratic_swirl <- function(lesson, course = "default", instructor, ...) {
   # check the instructor
@@ -61,9 +64,17 @@ socratic_swirl <- function(lesson, course = "default", instructor, ...) {
     stop("Instructor ", instructor, " not found")
   }
   
-  # course_name <- stringr::str_replace_all(course, " ", "_")
   message("Installing course ", course)
   install_course_socratic_swirl(course)
+  
+  # check that lesson exists in the directory
+  course_name <- stringr::str_replace_all(course, " ", "_")
+  lesson_name <- stringr::str_replace_all(lesson, " ", "_")
+  lesson_dir <- file.path(find.package("swirl"), "Courses", course_name, lesson_name)
+  
+  if (!file.exists(lesson_dir)) {
+    stop("Lesson '", lesson, "' not found in course '", course, "'")
+  }
 
   # set course and lesson name options
   options(socratic_swirl_course = course, socratic_swirl_lesson = lesson,
@@ -84,13 +95,15 @@ socratic_swirl_error <- function() {
   command <- stringr::str_trim(tail(readLines(".hist"), 1))
   unlink(".hist")
   
-  opts <- socratic_swirl_options()
-  exercise <- getOption("socratic_swirl_exercise")
-  
+  opts <- socratic_swirl_options(error = FALSE)
+  if (is.null(opts)) {
+    return(NULL)
+  }
+
   ret <- parse_object("StudentResponse",
                       course = opts$course,
                       lesson = opts$lesson,
-                      exercise = exercise,
+                      exercise = opts$exercise,
                       instructor = opts$instructor,
                       isCorrect = FALSE,
                       command = command,
@@ -127,9 +140,11 @@ exercise <- function(exercise) {
 #' @param e Swirl environment, containing info on the current Swirl session
 #' @param correct whether the answer was correct
 #' 
+#' @import rparse
+#' 
 #' @return boolean describing whether it uploaded the Socratic Swirl results
 notify_socratic_swirl <- function(e, correct = TRUE) {
-  o <- socratic_swirl_options()
+  o <- socratic_swirl_options(error = FALSE)
   if (is.null(o)) {
     # no socratic swirl set up
     return(FALSE)
@@ -157,6 +172,8 @@ notify_socratic_swirl <- function(e, correct = TRUE) {
 #' Given the title of a course, install it from the server
 #'
 #' @param course Course title
+#' 
+#' @import rparse
 #'
 #' @export
 install_course_socratic_swirl <- function(course) {
