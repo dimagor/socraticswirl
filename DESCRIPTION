@@ -1,14 +1,14 @@
-Package: swirl
-Title: Learn R, in R
-Description: swirl turns the R console into an interactive learning
-    environment. Users receive immediate feedback as they are guided through
-    self-paced lessons in data science and R programming.
-URL: http://swirlstats.com
-Version: 2.2.21
+Package: socraticswirl
+Title: Learn R With Interactive In-class Examples
+Description: Let students be prompted with in-class questions in their
+  R terminal, and update their instructor in real time.
+URL: http://socraticswirl.org
+Version: 0.0.9000
 License: GPL-3
 Authors@R: c(
-    person("Nick", "Carchedi", email = "nick.carchedi@gmail.com",
-    role = c("aut", "cre")),
+    person("Dima", "Gorenshteyn", email = "dimaoo7@gmail.com", role = c("aut", "cre")),
+    person("David", "Robinson", email = "admiral.david@gmail.com", role = "aut"),
+    person("Nick", "Carchedi", email = "nick.carchedi@gmail.com", role = "aut"),
     person("Bill", "Bauer", role = "aut"),
     person("Gina", "Grdina", role = "aut"),
     person("Sean", "Kross", role = "aut")
@@ -16,15 +16,15 @@ Authors@R: c(
 Depends: 
     R (>= 3.0.2)
 Imports: 
+    rparse,
     stringr,
     testthat,
     httr,
     yaml,
     RCurl,
     digest,
-    tools,
-    shiny (>= 0.11.1),
-    shinydashboard
+    tools
 Roxygen: list(wrap = FALSE)
-Suggests: knitr
+Suggests: knitr,
+  socraticswirlInstructor
 VignetteBuilder: knitr

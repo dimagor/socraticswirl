@@ -24,6 +24,10 @@ socratic_swirl_options <- function(error = TRUE) {
          "socratic_swirl?")
   }
   
+  parse_object("StudentSession", course = course, lesson = lesson,
+               instructor = instructor, student = student,
+               ACL = socratic_swirl_acl())
+
   return(list(course = course, lesson = lesson, instructor = instructor,
               student = student, exercise = exercise))
 }
@@ -178,8 +182,6 @@ notify_socratic_swirl <- function(e, correct = TRUE) {
 #' @export
 install_course_socratic_swirl <- function(course) {
   # retrieve course
-  course <- stringr::str_replace_all(course, " ", "_")
-
   co <- parse_query("Course", title = course)
   
   if (length(co) == 0) {
