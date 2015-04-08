@@ -170,6 +170,30 @@ notify_socratic_swirl <- function(e, correct = TRUE) {
   TRUE
 }
 
+#' Submit a question to the instructor
+#'
+#'
+#' @param q Question
+#' 
+#' @import rparse
+#'
+#' @export
+ask_question <- function(q){
+  o <- socratic_swirl_options(error = FALSE)
+  if (is.null(o)) {
+    # no socratic swirl set up
+    return(FALSE)
+  }
+  ret <- parse_object("StudentQuestion",
+               course = o$course,
+               lesson = o$lesson,
+               instructor = o$instructor,
+               student = o$student,
+               question = q,
+               addressed = FALSE,
+               ACL = socratic_swirl_acl())
+}
+
 
 #' install a course from the Socratic Swirl server
 #'
