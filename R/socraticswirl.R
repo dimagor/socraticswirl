@@ -162,6 +162,7 @@ notify_socratic_swirl <- function(e, correct = TRUE) {
                       instructor = o$instructor,
                       isCorrect = correct,
                       isError = FALSE,
+                      errorMsg = "",
                       command = answer,
                       student = o$student,
                       ACL = socratic_swirl_acl())
