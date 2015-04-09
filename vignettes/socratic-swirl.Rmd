@@ -14,15 +14,13 @@ library(knitr)
 opts_chunk$set(eval = FALSE)
 ```
 
-SocraticSwirl is a *fork* of the [Swirl](http://swirlstats.com/) software, released under the GPL-3 license. This package can be used exactly like Swirl, but it has additional features that allow students to take interactive exercises in class that update the instructor in real time.
-
-## For Students
+### Usage
 
 Your instructor will give you a line of code to run within your R terminal, which will register your SocraticSwirl session so that it knows what lesson you are taking and who your instructor is. It will look something like this:
 
 ```{r}
 library(socraticswirl)
-socratic_swirl("linear regression", instructor = "instructors_name")
+socratic_swirl("linear regression", instructor = "instructors name")
 ```
 
 After that, you can take any individual exercise, whenever the instructor prompts you, with a single line of R code. To take the first exercise in a session, do:
@@ -42,4 +40,3 @@ It's that simple!
 ### FAQs
 
 * **Are my answers submitted anonymously?** Yes! You are granted an anonymous ID that distinguishes your answers, but there is no way for your instructor or anyone else to match it back to your name or any other identifying information.
-* ****

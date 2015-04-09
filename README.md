@@ -1,47 +1,35 @@
-# swirl
+# Socratic Swirl
 
-[![Build Status](https://travis-ci.org/swirldev/swirl.png?branch=master)](https://travis-ci.org/swirldev/swirl)
+Socratic Swirl lets instructors of the R programming language offer in-class, interactive programming exercises, while letting the instructors view student answers and progress in real-time. (For the instructor version, [see here](https://github.com/dimaoo7/socraticswirl-instructor)).
 
-### [http://swirlstats.com](http://swirlstats.com)
+### For students
 
-swirl is a platform for learning (and teaching) statistics and R simultaneously and interactively. It presents a choice of course lessons and interactively tutors a user through them. A user may be asked to watch a video, to answer a multiple-choice or fill-in-the-blanks question, or to enter a command in the R console precisely as if he or she were using R in practice. Emphasis is on the last, interacting with the R console. User responses are tested for correctness and hints are given if appropriate. Progress is automatically saved so that a user may quit at any time and later resume without losing work.
+To install the package, copy and paste the following into your R terminal:
 
-swirl leans heavily on exercising a student's use of the R console. A callback mechanism, suggested and first demonstrated for the purpose by Hadley Wickham, is used to capture student input and to provide immediate feedback relevant to the course material at hand.
+    install.packages("devtools")
+    devtools::install_github(c("dgrtwo/rparse", "dimaoo7/socraticswirl"))
 
-[swirlify](https://github.com/swirldev/swirlify) is a separate R package that provides a comprehensive toolbox for swirl instructors. Content is authored in [YAML](http://en.wikipedia.org/wiki/YAML) using the handy tools described on the [instructors page](http://swirlstats.com/instructors.html) of our website.
+Your instructor will give you a line of code to run within your R terminal, which will register your SocraticSwirl session so that it knows what lesson you are taking and who your instructor is. It will look something like this:
 
-The program is initiated with `swirl()`. Functions which control swirl's behavior include `bye()` to quit, `skip()` to skip a question, `main()` to return to the main menu, `play()` to allow experimentation in the R console without interference from swirl, `nxt()` to resume interacting with swirl, and `info()` to display a help menu.
-
-
-## Installing swirl (from CRAN)
-
-The easiest way to install and run swirl is by typing the following from the R console:
-
-```
-install.packages("swirl")
-library(swirl)
-swirl()
+``` r
+library(socraticswirl)
+socratic_swirl("linear regression", instructor = "instructors name")
 ```
 
-As we continue adding new features and content, we will make new versions available on CRAN as appropriate (every 1-2 months, most likely).
+After that, you can take any individual exercise, whenever the instructor prompts you, with a single line of R code. To take the first exercise in a lesson, do:
 
-## Installing the latest development version (from GitHub)
-
-To access the most recent features and content, you can install and run the development version of swirl using the [devtools](https://github.com/hadley/devtools) package:
-
-```
-install.packages("devtools")
-devtools::install_github("swirldev/swirl")
-library(swirl)
-swirl()
+``` r
+exercise(1)
 ```
 
-## Contributing to swirl's development
+To take the third exercise, you would do:
 
-If you'd like to get involved, please fork this repository and submit a pull request with your proposed changes. We're happy to chat if you have any questions about the source code.
+``` r
+exercise(3)
+```
 
-## Using swirl in the classroom
+It's that simple!
 
-Instructors around the world are using swirl in their classrooms. We think this is awesome. If you're an instructor, please feel free to do the same -- free of charge. While your students may be paying to take your course or attend your institution, we simply ask that you don't charge people *directly* for the use of our software or instructional content.
+### LICENSE
 
-If you are not sure about a particular use case, don't hesitate to send us an email at info@swirlstats.com.
+`socraticswirl` is a fork of the [Swirl](https://github.com/swirldev/swirl) package. It is released under the [GPL-3 license](http://www.r-project.org/Licenses/GPL-3).
