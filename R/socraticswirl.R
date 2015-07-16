@@ -90,7 +90,7 @@ socratic_swirl <- function(course, lesson, student, instructor = "mcahn", instan
   # check that lesson exists in the directory
   course_name <- stringr::str_replace_all(course, " ", "_")
   lesson_name <- stringr::str_replace_all(lesson, " ", "_")
-  lesson_dir <- file.path(find.package("swirl"), "Courses", course_name, lesson_name)
+  lesson_dir <- file.path(find.package("socraticswirl"), "Courses", course_name, lesson_name)
   
   if (!file.exists(lesson_dir)) {
     stop("Lesson '", lesson, "' not found in course '", course, "'")
