@@ -453,6 +453,7 @@ resume.default <- function(e, ...){
        !uses_func("testit")(e$expr)[[1]] &&
        !uses_func("nxt")(e$expr)[[1]] &&
        !uses_func("exercise")(e$expr)[[1]] &&
+       !uses_func("start")(e$expr)[[1]] &&
      isTRUE(customTests$AUTO_DETECT_NEWVAR)) {
     e$delta <- mergeLists(safeEval(e$expr, e), e$delta)
   }
