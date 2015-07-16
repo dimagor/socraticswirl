@@ -26,7 +26,7 @@ mainMenu.default <- function(e){
   # Welcome the user if necessary and set up progress tracking
   if(!exists("usr",e,inherits = FALSE)){
     e$usr <- welcome(e)
-    udat <- file.path(find.package("swirl"), "user_data", e$usr)
+    udat <- file.path(find.package("socraticswirl"), "user_data", e$usr)
     if(!file.exists(udat)){
       housekeeping(e)
       dir.create(udat, recursive=TRUE)
@@ -375,7 +375,7 @@ order_lessons <- function(current_order, manifest_order) {
 
 courseDir.default <- function(e){
   # e's only role is to determine the method used
-  file.path(find.package("swirl"), "Courses")
+  file.path(find.package("socraticswirl"), "Courses")
 }
 
 # Default for determining the user
