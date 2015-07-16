@@ -6,10 +6,21 @@
                   skip_after=TRUE)
     )
   
-  # set socratic swirl options
-  Sys.setenv(PARSE_APPLICATION_ID = "C0pM75Sepnt5WhK6P6yhRA0TqVa6Xa3vqwZjpLfT",
-             PARSE_API_KEY = "HyXS1gEn6gf7gibjDJVWPYsnIoc0SXcp4mwohdmI")
+  # A First Course in Quantitative Social Science
+  # Test or production database
+  ## opts <- socratic_swirl_options()
+  ## if (opts$instance == "test") {
+  ##     Sys.setenv(PARSE_APPLICATION_ID = "ExUHBnNy849HFGslrnwX31DcoxUxPtcf2FA1QIvr",
+  ##                PARSE_API_KEY = "dGuEAkmJLEkTLwcOkdW5AmoeS4I44sfBTu9hWO05")
+  ## } else {
+  ##     Sys.setenv(PARSE_APPLICATION_ID = "xxx",
+  ##                PARSE_API_KEY = "xxx")
+  ## }
   
+  # Dima's demo database
+  #Sys.setenv(PARSE_APPLICATION_ID = "C0pM75Sepnt5WhK6P6yhRA0TqVa6Xa3vqwZjpLfT",
+  #           PARSE_API_KEY = "HyXS1gEn6gf7gibjDJVWPYsnIoc0SXcp4mwohdmI")
+
   invisible()
 }
 

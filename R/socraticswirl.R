@@ -14,7 +14,8 @@ socratic_swirl_options <- function(error = TRUE) {
   lesson <- getOption("socratic_swirl_lesson")
   instructor <- getOption("socratic_swirl_instructor")
   exercise <- getOption("socratic_swirl_exercise")
-  student <- digest::digest(Sys.info())
+  student <- getOption("socratic_swirl_student")
+  # student <- digest::digest(Sys.info())
   
   if (is.null(course) || is.null(lesson) || is.null(instructor)) {
     if (!error) {
@@ -53,21 +54,36 @@ socratic_swirl_acl <- function() {
 #' Run this to set up a SocraticSwirl lesson. Particular exercises can then
 #' be accessed using the \code{\link{exercise}} function.
 #' 
+#' @param course course name
 #' @param lesson lesson name
 #' @param instructor instructor's name
-#' @param course course name, default \code{"none"}
-#' @param ... extra arguments, not yet used
+#' @param student student's email
 #' 
 #' @import rparse
 #' 
 #' @export
-socratic_swirl <- function(lesson, course = "default", instructor, ...) {
+socratic_swirl <- function(course, lesson, student, instructor = "mcahn", instance = "prod") {
+    
+  if (instance == "test") {
+      Sys.setenv(PARSE_APPLICATION_ID = "ExUHBnNy849HFGslrnwX31DcoxUxPtcf2FA1QIvr",
+                 PARSE_API_KEY = "dGuEAkmJLEkTLwcOkdW5AmoeS4I44sfBTu9hWO05")
+  } else {
+      Sys.setenv(PARSE_APPLICATION_ID = "Cr8KYEFAprGfivUTN5axDariMjKnGNjyTr0sUTli",
+                 PARSE_API_KEY = "v8TuFxVmMocHT6kn517Kx7Np4DC2L7Lk1ngpfl1M")
+  }
+
   # check the instructor
   instructor_user <- parse_query("_User", username = instructor)
   if (is.null(instructor_user)) {
     stop("Instructor ", instructor, " not found")
   }
   
+  # check the student
+  stobject <- parse_query("StudentList", email = student)
+  if (is.null(stobject)) {
+    stop("Student ", student, " not found -- please sign in with your email address.")
+  }
+
   message("Installing course ", course)
   install_course_socratic_swirl(course)
   
@@ -81,12 +97,15 @@ socratic_swirl <- function(lesson, course = "default", instructor, ...) {
   }
 
   # set course and lesson name options
-  options(socratic_swirl_course = course, socratic_swirl_lesson = lesson,
+  options(socratic_swirl_course = course,
+          socratic_swirl_lesson = lesson,
           socratic_swirl_instructor = instructor,
+          socratic_swirl_student = student,
           socratic_swirl_instructor_id = instructor_user$objectId)
   
   # set up error function
   options(error = socratic_swirl_error)
+
 }
 
 
@@ -138,6 +157,24 @@ exercise <- function(exercise) {
         from = exercise,
         to = exercise + .5)
 }
+
+#' Take an instructor-provided lesson with SocraticSwirl
+#' 
+#' This is to be called after \code{\link{socratic_swirl}} is used to set up
+#' a SocraticSwirl session.
+#' 
+#' @param exercise Which quiz exercise to take; provided by instructor
+#' 
+#' @export
+
+start <- function() {
+  opts <- socratic_swirl_options()
+  
+  swirl("test",
+        test_course = opts$course,
+        test_lesson = opts$lesson)
+}
+
 
 #' Given a Swirl environment, update SocraticSwirl server
 #' 
@@ -212,7 +249,7 @@ install_course_socratic_swirl <- function(course) {
   if (length(co) == 0) {
     stop("No course with title ", course, " found")
   }
-  
+
   # get the first one (there should never be redundant; but just in case)
   install_course_url(co$zipfile$url[1])
 }
