@@ -168,8 +168,10 @@ testResponse.default <- function(current.row, e){
     tests <- str_trim(unlist(strsplit(tests,";")))
     results <- lapply(tests, function(keyphrase){testMe(keyphrase,e)})
   }
+  options(socratic_swirl_exercise = e$row)
   correct <- !(FALSE %in% unlist(results))
   if(correct){
+    notify_socratic_swirl(e, TRUE)
     swirl_out(praise())
     e$iptr <- 1
     e$row <- 1 + e$row

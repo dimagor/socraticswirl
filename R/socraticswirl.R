@@ -195,7 +195,7 @@ notify_socratic_swirl <- function(e, correct = TRUE) {
   ret <- parse_object("StudentResponse",
                       course = e$test_course,
                       lesson = e$test_lesson,
-                      exercise = e$test_from,  # index of question
+                      exercise = o$exercise,  # index of question
                       instructor = o$instructor,
                       isCorrect = correct,
                       isError = FALSE,
