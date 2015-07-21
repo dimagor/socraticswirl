@@ -15,6 +15,7 @@ socratic_swirl_options <- function(error = TRUE) {
   instructor <- getOption("socratic_swirl_instructor")
   exercise <- getOption("socratic_swirl_exercise")
   student <- getOption("socratic_swirl_student")
+  isskipped <- getOption("socratic_swirl_isskipped")
   # student <- digest::digest(Sys.info())
   
   if (is.null(course) || is.null(lesson) || is.null(instructor)) {
@@ -30,7 +31,7 @@ socratic_swirl_options <- function(error = TRUE) {
                ACL = socratic_swirl_acl())
 
   return(list(course = course, lesson = lesson, instructor = instructor,
-              student = student, exercise = exercise))
+              student = student, exercise = exercise, isskipped = isskipped))
 }
 
 #' Create an ACL (Access Control List) object for instructor-only objects
@@ -101,7 +102,8 @@ socratic_swirl <- function(course, lesson, student, instructor = "mcahn", instan
           socratic_swirl_lesson = lesson,
           socratic_swirl_instructor = instructor,
           socratic_swirl_student = student,
-          socratic_swirl_instructor_id = instructor_user$objectId)
+          socratic_swirl_instructor_id = instructor_user$objectId,
+          socratic_swirl_isskipped = FALSE)
   
   # set up error function
   options(error = socratic_swirl_error)
@@ -151,6 +153,9 @@ exercise <- function(exercise) {
   
   options(socratic_swirl_exercise = exercise)
 
+  # set up error function
+  options(error = socratic_swirl_error)
+
   swirl("test",
         test_course = opts$course,
         test_lesson = opts$lesson,
@@ -170,6 +175,9 @@ exercise <- function(exercise) {
 start <- function() {
   opts <- socratic_swirl_options()
   
+  # set up error function
+  options(error = socratic_swirl_error)
+
   swirl("test",
         test_course = opts$course,
         test_lesson = opts$lesson)
@@ -191,7 +199,17 @@ notify_socratic_swirl <- function(e, correct = TRUE) {
     return(FALSE)
   }
 
-  answer <- paste(str_trim(deparse(e$expr)), collapse = " ")
+  if (o$isskipped) {
+      answer = "SKIPPED"
+      options(socratic_swirl_isskipped = FALSE)
+  } else {
+      if (e$current.row$Class[1] == 'mult_question') {
+          answer <- e$val
+      } else {
+          answer <- paste(str_trim(deparse(e$expr)), collapse = " ")
+      }
+  }
+  
   ret <- parse_object("StudentResponse",
                       course = e$test_course,
                       lesson = e$test_lesson,

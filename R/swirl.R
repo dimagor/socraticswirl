@@ -348,6 +348,9 @@ resume.default <- function(e, ...){
     # Enter the correct answer for the user
     # by simulating what the user should have done
     correctAns <- e$current.row[,"CorrectAnswer"]
+
+    # Indicate a question is being skipped
+    options(socratic_swirl_isskipped = TRUE)
     
     # If we are on a script question, the correct answer should
     # simply source the correct script
@@ -465,13 +468,17 @@ resume.default <- function(e, ...){
     if(e$row > min(nrow(e$les), e$test_to)) {
       # If in test mode, we don't want to run another lesson
       if(is(e, "test")) {
-        if (!(notify_socratic_swirl(e))) {
-          swirl_out("Lesson complete! Exiting swirl now...",
-                    skip_after=TRUE)
-        } else {
-          # get rid of socratic swirl error function
-          options(error = NULL)
-        }
+        swirl_out("Lesson complete! Exiting swirl now...",
+                  skip_after=TRUE)
+        # get rid of socratic swirl error function
+        options(error = NULL)
+        ## if (!(notify_socratic_swirl(e))) {
+        ##   swirl_out("Lesson complete! Exiting swirl now...",
+        ##             skip_after=TRUE)
+        ## } else {
+        ##   # get rid of socratic swirl error function
+        ##   options(error = NULL)
+        ## }
         esc_flag <- FALSE # to supress double notification
         return(FALSE)
       }
