@@ -124,7 +124,7 @@ socratic_swirl_error <- function() {
   if (is.null(opts)) {
     return(NULL)
   }
-
+ 
   ret <- parse_object("StudentResponse",
                       course = opts$course,
                       lesson = opts$lesson,
@@ -210,9 +210,21 @@ notify_socratic_swirl <- function(e, correct = TRUE) {
       }
   }
   
+# If needed, dump the option files to find out if o is ok, and if e carries anything at all. 
+# Since e is an environment created in swirl(), not sure what's in it. The above e$current_row may at risk too.
+  if (FALSE) {
+    if (is.null(e$test_course) || is.null(e$test_lesson) || is.na(e$test_course) || is.na(e$test_lesson)) {
+      save(e, file=gsub("\\s", "", paste0("e-", date())))
+    }
+    if (is.null(o$course) || is.null(o$lesson) || is.na(o$course) || is.na(o$lesson)) {
+      save(o, file=gsub("\\s", "", paste0("o-", date())))
+    }
+  }
+
+# Since o is verified at the begin of this procedure/function, it is safe to use o instead of e which is questionable.
   ret <- parse_object("StudentResponse",
-                      course = e$test_course,
-                      lesson = e$test_lesson,
+                      course = o$course,
+                      lesson = o$lesson,
                       exercise = o$exercise,  # index of question
                       instructor = o$instructor,
                       isCorrect = correct,
