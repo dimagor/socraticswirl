@@ -26,6 +26,7 @@ waitUser <- function(current.row, e)UseMethod("waitUser")
 waitUser.default <- function(current.row, e){
   readline("...")
   e$row <- 1 + e$row
+  options(socratic_swirl_exercise = e$row)
   e$iptr <- 1
 }
 
@@ -54,6 +55,7 @@ waitUser.video <- function(current.row, e){
     browseURL(current.row[,"VideoLink"])
   }
   e$row <- 1 + e$row
+  options(socratic_swirl_exercise = e$row)
   e$iptr <- 1
 }
 
@@ -67,6 +69,7 @@ waitUser.figure <- function(current.row, e){
   })
   readline("...")
   e$row <- 1 + e$row
+  options(socratic_swirl_exercise = e$row)
   e$iptr <- 1
 }
 
@@ -175,6 +178,7 @@ testResponse.default <- function(current.row, e){
     swirl_out(praise())
     e$iptr <- 1
     e$row <- 1 + e$row
+  options(socratic_swirl_exercise = e$row)
     # Reset attempts counter, since correct
     e$attempts <- 1
   } else {
