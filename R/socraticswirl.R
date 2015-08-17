@@ -205,6 +205,10 @@ notify_socratic_swirl <- function(e, correct = TRUE) {
   } else {
       if (e$current.row$Class[1] == 'mult_question') {
           answer <- e$val
+          if ((answer=="") & (correct==FALSE)) {
+            e$prompt = TRUE
+            return(FALSE)
+          }
       } else {
           answer <- paste(str_trim(deparse(e$expr)), collapse = " ")
       }

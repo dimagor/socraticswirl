@@ -102,7 +102,7 @@ bye <- function(){
   # no more socratic swirl error function
   options(error = NULL)
   
-  swirl_out("Leaving swirl now. Type swirl() to resume.", skip_after=TRUE)
+  swirl_out("Leaving Socraticswirl now. Type start() to restart and nxt() to resume.", skip_after=TRUE)
   invisible()
 }
 
@@ -298,7 +298,7 @@ resume.default <- function(e, ...){
   }
   
   esc_flag <- TRUE
-  on.exit(if(esc_flag)swirl_out("Leaving swirl now. Type swirl() to resume.", skip_after=TRUE))
+  on.exit(if(esc_flag)swirl_out("Leaving Socraticswirl now. Type start() to restart and nxt() to resume.", skip_after=TRUE))
   # Trap special functions
   if(uses_func("info")(e$expr)[[1]]){
     esc_flag <- FALSE
@@ -439,7 +439,7 @@ resume.default <- function(e, ...){
   # If menu returns FALSE, the user wants to exit.
   if(is.logical(temp) && !isTRUE(temp)){
     #if (!is(e, "test")) {
-      swirl_out("Leaving swirl now. Type swirl() to resume.", skip_after=TRUE)
+      swirl_out("Leaving Socraticswirl now. Type start() to restart and nxt() to resume.", skip_after=TRUE)
     #}
     esc_flag <- FALSE # To supress double notification
     return(FALSE)
@@ -507,7 +507,7 @@ resume.default <- function(e, ...){
       temp <- mainMenu(e)
       # if menu returns FALSE, user wants to quit.
       if(is.logical(temp) && !isTRUE(temp)){
-        swirl_out("Leaving swirl now. Type swirl() to resume.", skip_after=TRUE)
+        swirl_out("Leaving Socraticswirl now. Type start() to restart and nxt() to resume.", skip_after=TRUE)
         esc_flag <- FALSE # to supress double notification
         return(FALSE)
       }
