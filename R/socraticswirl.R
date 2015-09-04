@@ -73,6 +73,10 @@ socratic_swirl <- function(course, lesson, student, instructor = "mcahn", instan
                  PARSE_API_KEY = "v8TuFxVmMocHT6kn517Kx7Np4DC2L7Lk1ngpfl1M")
   }
 
+  # All courses and lessons should be upper case
+  course = toupper(course)
+  lesson = toupper(lesson)
+
   # check the instructor
   instructor_user <- parse_query("_User", username = instructor)
   if (is.null(instructor_user)) {
