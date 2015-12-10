@@ -63,22 +63,20 @@ socratic_swirl_acl <- function() {
 #' @import rparse
 #' 
 #' @export
-socratic_swirl <- function(course, lesson, student, instructor = "mcahn", instance = "prod") {
+socratic_swirl <- function(course, lesson, student, instructor = "<socraticswirl instructorID>", instance = "prod") {
     
-  if (instance == "test") {
-      # pol345
-      Sys.setenv(PARSE_APPLICATION_ID = "ckXMHnjXCoHMq1JrM7r5nEQixJnZdcyOdTtSQBCd",
-                 PARSE_API_KEY = "lJ20RxXJiLFpXE028c4gePlyoQsmGCjSQSNFyxxl")
-      # fsir
-      # Sys.setenv(PARSE_APPLICATION_ID = "ExUHBnNy849HFGslrnwX31DcoxUxPtcf2FA1QIvr",
-      #            PARSE_API_KEY = "dGuEAkmJLEkTLwcOkdW5AmoeS4I44sfBTu9hWO05")
-  } else {
-      # pol345
-      Sys.setenv(PARSE_APPLICATION_ID = "bf6u93D9Rxaeujxzkdedp3m5wVJNAoNMr9vRt5ab",
-                 PARSE_API_KEY = "efh92r6hs0f8ESJcgOAY1i5ePmii86ip1QJRFTTK")
+# For a working version:
+# 1. Replace <socraticswirl instructorID> with the username of an instructor
+#    registered in the parse.com database.  This must be the same as the username and password
+#    used in the dashboard to login to parse.com
+# 2. Replace <parse.com application key> and <parse.com API key> with the appropriate parse.com keys
 
-      # Sys.setenv(PARSE_APPLICATION_ID = "Cr8KYEFAprGfivUTN5axDariMjKnGNjyTr0sUTli",
-      #            PARSE_API_KEY = "v8TuFxVmMocHT6kn517Kx7Np4DC2L7Lk1ngpfl1M")
+  if (instance == "test") {
+      Sys.setenv(PARSE_APPLICATION_ID = "<parse.com application key for test application>",
+                 PARSE_API_KEY = "parse.com API key for test application>")
+  } else {
+      Sys.setenv(PARSE_APPLICATION_ID = "<parse.com application key for production application>",
+                 PARSE_API_KEY = "<parse.com API key for production application")
   }
 
   # All courses and lessons should be upper case
