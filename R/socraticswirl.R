@@ -1,6 +1,18 @@
 # This contains functions for uploading exercise results to
 # SocraticSwirl servers.
 
+#
+# Validate a student to use the software for a class
+#
+socratic_swirl_init <- function(id, app, api, instance = "prod") {
+  Sys.setenv(PARSE_APPLICATION_ID = app, PARSE_API_KEY = api)
+  if (is.null(parse_query("StudentList", email = id))) {
+      print("Initialization failed, please make sure your ID and keys are correct.")
+  } else {
+      saveRDS(c(id, app, api, instance), paste0(find.package("socraticswirl"), "/R/.userRDS"))
+      print("Initialization completed.")
+  }
+}      
 
 #' extract socratic_swirl options from environment
 #' 
@@ -71,17 +83,40 @@ socratic_swirl <- function(course, lesson, student, instructor = "<socraticswirl
 #    used in the dashboard to login to parse.com
 # 2. Replace <parse.com application key> and <parse.com API key> with the appropriate parse.com keys
 
-  if (instance == "test") {
-      Sys.setenv(PARSE_APPLICATION_ID = "<parse.com application key for test application>",
-                 PARSE_API_KEY = "parse.com API key for test application>")
-  } else {
-      Sys.setenv(PARSE_APPLICATION_ID = "<parse.com application key for production application>",
-                 PARSE_API_KEY = "<parse.com API key for production application")
+#  if (instance == "test") {
+#      Sys.setenv(PARSE_APPLICATION_ID = "<parse.com application key for test application>",
+#                 PARSE_API_KEY = "parse.com API key for test application>")
+#  } else {
+#      Sys.setenv(PARSE_APPLICATION_ID = "<parse.com application key for production application>",
+#                 PARSE_API_KEY = "<parse.com API key for production application")
+#  }
+
+  if (!file.exists(paste0(find.package("socraticswirl"), "/R/.userRDS"))) {
+    stop("Socratic swirl is not initialized yet.")
   }
+  obj <- readRDS(paste0(find.package("socraticswirl"), "/R/.userRDS"))
+  Sys.setenv(PARSE_APPLICATION_ID = obj[2], PARSE_API_KEY = obj[3])
 
   # All courses and lessons should be upper case
   course = toupper(course)
   lesson = toupper(lesson)
+
+  # check the instance
+  if (instance != obj[4]) {
+    stop("Mismatch instance. You may need to initiate socratic swirl with the correct ID and keys that matches the instance.")
+  }
+
+  # check the environment
+  users <- parse_query("_User")
+  if (is.null(users)) {
+    stop("Socratic swirl may not be initiated correctly")
+  }
+ 
+  # check the student
+  a <- parse_query("StudentList", email = student)
+  if (is.null(a)) {
+    stop("Student ", student, " not found")
+  }
 
   # check the instructor
   instructor_user <- parse_query("_User", username = instructor)
