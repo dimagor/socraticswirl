@@ -7,7 +7,7 @@ Socratic Swirl lets instructors of the R programming language offer in-class, in
 To install the package, copy and paste the following into your R terminal:
 
     install.packages("devtools")
-    devtools::install_github(c("dgrtwo/rparse", "dimaoo7/socraticswirl"))
+    devtools::install_github(c("dgrtwo/rparse", "dimagor/socraticswirl"))
 
 Your instructor will give you a line of code to run within your R terminal, which will register your SocraticSwirl session so that it knows what lesson you are taking and who your instructor is. It will look something like this:
 
