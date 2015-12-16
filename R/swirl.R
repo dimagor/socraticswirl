@@ -102,7 +102,7 @@ bye <- function(){
   # no more socratic swirl error function
   options(error = NULL)
   
-  swirl_out("Leaving swirl now. Type swirl() to resume.", skip_after=TRUE)
+  swirl_out("Leaving Socraticswirl now. Type start() to restart and nxt() to resume.", skip_after=TRUE)
   invisible()
 }
 
@@ -298,7 +298,7 @@ resume.default <- function(e, ...){
   }
   
   esc_flag <- TRUE
-  on.exit(if(esc_flag)swirl_out("Leaving swirl now. Type swirl() to resume.", skip_after=TRUE))
+  on.exit(if(esc_flag)swirl_out("Leaving Socraticswirl now. Type start() to restart and nxt() to resume.", skip_after=TRUE))
   # Trap special functions
   if(uses_func("info")(e$expr)[[1]]){
     esc_flag <- FALSE
@@ -348,6 +348,9 @@ resume.default <- function(e, ...){
     # Enter the correct answer for the user
     # by simulating what the user should have done
     correctAns <- e$current.row[,"CorrectAnswer"]
+
+    # Indicate a question is being skipped
+    options(socratic_swirl_isskipped = TRUE)
     
     # If we are on a script question, the correct answer should
     # simply source the correct script
@@ -436,7 +439,7 @@ resume.default <- function(e, ...){
   # If menu returns FALSE, the user wants to exit.
   if(is.logical(temp) && !isTRUE(temp)){
     #if (!is(e, "test")) {
-      swirl_out("Leaving swirl now. Type swirl() to resume.", skip_after=TRUE)
+      swirl_out("Leaving Socraticswirl now. Type start() to restart and nxt() to resume.", skip_after=TRUE)
     #}
     esc_flag <- FALSE # To supress double notification
     return(FALSE)
@@ -453,6 +456,7 @@ resume.default <- function(e, ...){
        !uses_func("testit")(e$expr)[[1]] &&
        !uses_func("nxt")(e$expr)[[1]] &&
        !uses_func("exercise")(e$expr)[[1]] &&
+       !uses_func("start")(e$expr)[[1]] &&
      isTRUE(customTests$AUTO_DETECT_NEWVAR)) {
     e$delta <- mergeLists(safeEval(e$expr, e), e$delta)
   }
@@ -464,13 +468,17 @@ resume.default <- function(e, ...){
     if(e$row > min(nrow(e$les), e$test_to)) {
       # If in test mode, we don't want to run another lesson
       if(is(e, "test")) {
-        if (!(notify_socratic_swirl(e))) {
-          swirl_out("Lesson complete! Exiting swirl now...",
-                    skip_after=TRUE)
-        } else {
-          # get rid of socratic swirl error function
-          options(error = NULL)
-        }
+        swirl_out("Lesson complete! Exiting swirl now...",
+                  skip_after=TRUE)
+        # get rid of socratic swirl error function
+        options(error = NULL)
+        ## if (!(notify_socratic_swirl(e))) {
+        ##   swirl_out("Lesson complete! Exiting swirl now...",
+        ##             skip_after=TRUE)
+        ## } else {
+        ##   # get rid of socratic swirl error function
+        ##   options(error = NULL)
+        ## }
         esc_flag <- FALSE # to supress double notification
         return(FALSE)
       }
@@ -499,7 +507,7 @@ resume.default <- function(e, ...){
       temp <- mainMenu(e)
       # if menu returns FALSE, user wants to quit.
       if(is.logical(temp) && !isTRUE(temp)){
-        swirl_out("Leaving swirl now. Type swirl() to resume.", skip_after=TRUE)
+        swirl_out("Leaving Socraticswirl now. Type start() to restart and nxt() to resume.", skip_after=TRUE)
         esc_flag <- FALSE # to supress double notification
         return(FALSE)
       }

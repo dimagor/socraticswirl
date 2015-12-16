@@ -95,7 +95,7 @@ install_from_swirl <- function(course_name, dev = FALSE, mirror = "github"){
   response <- GET(url)
   
   # Construct path to Courses
-  path <- file.path(system.file("Courses", package = "swirl"), "temp.zip")
+  path <- file.path(system.file("Courses", package = "socraticswirl"), "temp.zip")
   
   # Write the response as a zip
   writeBin(content(response, "raw"), path)
@@ -116,14 +116,14 @@ install_from_swirl <- function(course_name, dev = FALSE, mirror = "github"){
   }
   
   # Extract
-  unzip(path, exdir=file.path(system.file(package = "swirl"), "Courses"), 
+  unzip(path, exdir=file.path(system.file(package = "socraticswirl"), "Courses"), 
         files=unzip_list)
   
   # Copy files from unzipped directory into Courses
-  top_dir <- file.path(system.file(package = "swirl"), "Courses", 
+  top_dir <- file.path(system.file(package = "socraticswirl"), "Courses", 
                        sort(dirname(unzip_list))[1])
   dirs_to_copy <- list.files(top_dir, full.names=TRUE)
-  if(file.copy(dirs_to_copy, file.path(system.file(package = "swirl"), "Courses"),
+  if(file.copy(dirs_to_copy, file.path(system.file(package = "socraticswirl"), "Courses"),
             recursive=TRUE)){
     swirl_out("Course installed successfully!", skip_after=TRUE)
   } else {
@@ -134,7 +134,7 @@ install_from_swirl <- function(course_name, dev = FALSE, mirror = "github"){
   unlink(top_dir, recursive=TRUE, force=TRUE)
   
   # If __MACOSX exists, delete it.
-  unlink(file.path(system.file(package = "swirl"), "Courses", "__MACOSX"),
+  unlink(file.path(system.file(package = "socraticswirl"), "Courses", "__MACOSX"),
          recursive=TRUE, force=TRUE)
   
   # Delete temp.zip
@@ -209,7 +209,7 @@ zip_course <- function(path, dest=NULL){
 #' }
 #' @family InstallCourses
 uninstall_course <- function(course_name){
-  path <- file.path(system.file(package = "swirl"), "Courses", 
+  path <- file.path(system.file(package = "socraticswirl"), "Courses", 
                     make_pathname(course_name))
   if(file.exists(path)){
     unlink(path, recursive=TRUE, force=TRUE)
@@ -230,7 +230,7 @@ uninstall_course <- function(course_name){
 #' }
 #' @family InstallCourses
 uninstall_all_courses <- function(){
-  path <- file.path(system.file(package = "swirl"), "Courses")
+  path <- file.path(system.file(package = "socraticswirl"), "Courses")
   yaml_exists <- file.exists(file.path(path, "suggested_courses.yaml"))
   if(yaml_exists){
     temp_file <- tempfile()
@@ -282,11 +282,11 @@ install_course_zip <- function(path, multi=FALSE, which_course=NULL){
     
     # Filter list and extract
     unzip_list <- Filter(function(x){grepl("/.+/", x)}, file_names)
-    unzip(path, exdir=file.path(system.file(package = "swirl"), "Courses"),
+    unzip(path, exdir=file.path(system.file(package = "socraticswirl"), "Courses"),
           files=unzip_list)
     
     # Copy files from unzipped directory into Courses
-    top_dir <- file.path(system.file(package = "swirl"), "Courses", 
+    top_dir <- file.path(system.file(package = "socraticswirl"), "Courses", 
                          sort(dirname(unzip_list))[1])
     dirs_to_copy <- list.files(top_dir, full.names=TRUE)
     # Subset desired courses if specified with which_courses arg
@@ -299,7 +299,7 @@ install_course_zip <- function(path, multi=FALSE, which_course=NULL){
       }
       dirs_to_copy <- dirs_to_copy[match_ind]
     }
-    if(file.copy(dirs_to_copy, file.path(system.file(package = "swirl"),
+    if(file.copy(dirs_to_copy, file.path(system.file(package = "socraticswirl"),
                                       "Courses"), recursive=TRUE)){
       swirl_out("Course installed successfully!", skip_after=TRUE)
     } else {
@@ -311,12 +311,12 @@ install_course_zip <- function(path, multi=FALSE, which_course=NULL){
     
   } else {
     # Unzip file into courses
-    file_list <- unzip(path, exdir=file.path(system.file(package = "swirl"),
+    file_list <- unzip(path, exdir=file.path(system.file(package = "socraticswirl"),
                                              "Courses"))
   }
   
   # If __MACOSX exists, delete it.
-  unlink(file.path(system.file(package = "swirl"), "Courses", "__MACOSX"),
+  unlink(file.path(system.file(package = "socraticswirl"), "Courses", "__MACOSX"),
          recursive=TRUE, force=TRUE)
 
   invisible()
@@ -345,7 +345,7 @@ install_course_directory <- function(path){
   }
   
   # Copy files
-  if(file.copy(path, file.path(system.file(package = "swirl"), "Courses"),
+  if(file.copy(path, file.path(system.file(package = "socraticswirl"), "Courses"),
             recursive=TRUE)){
     swirl_out("Course installed successfully!", skip_after=TRUE)
   } else {
@@ -434,7 +434,7 @@ install_course_url <- function(url, multi=FALSE){
   response <- GET(url)
   
   # Construct path to Courses
-  path <- file.path(system.file(package = "swirl"), "Courses", "temp.zip")
+  path <- file.path(system.file(package = "socraticswirl"), "Courses", "temp.zip")
   
   # Write the response as a zip
   writeBin(content(response, "raw"), path)
@@ -455,9 +455,9 @@ install_course_url <- function(url, multi=FALSE){
                        str_extract(url, perl("[^/]+/{1}zipball")) )
     
     # Rename unzipped directory
-    file.rename(file.path(system.file(package = "swirl"), 
+    file.rename(file.path(system.file(package = "socraticswirl"), 
                           "Courses", old_name), 
-                file.path(system.file(package = "swirl"), 
+                file.path(system.file(package = "socraticswirl"), 
                           "Courses", course_name))
   }
   

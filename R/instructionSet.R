@@ -26,6 +26,7 @@ waitUser <- function(current.row, e)UseMethod("waitUser")
 waitUser.default <- function(current.row, e){
   readline("...")
   e$row <- 1 + e$row
+  options(socratic_swirl_exercise = e$row)
   e$iptr <- 1
 }
 
@@ -54,6 +55,7 @@ waitUser.video <- function(current.row, e){
     browseURL(current.row[,"VideoLink"])
   }
   e$row <- 1 + e$row
+  options(socratic_swirl_exercise = e$row)
   e$iptr <- 1
 }
 
@@ -67,6 +69,7 @@ waitUser.figure <- function(current.row, e){
   })
   readline("...")
   e$row <- 1 + e$row
+  options(socratic_swirl_exercise = e$row)
   e$iptr <- 1
 }
 
@@ -168,11 +171,14 @@ testResponse.default <- function(current.row, e){
     tests <- str_trim(unlist(strsplit(tests,";")))
     results <- lapply(tests, function(keyphrase){testMe(keyphrase,e)})
   }
+  options(socratic_swirl_exercise = e$row)
   correct <- !(FALSE %in% unlist(results))
   if(correct){
+    notify_socratic_swirl(e, TRUE)
     swirl_out(praise())
     e$iptr <- 1
     e$row <- 1 + e$row
+  options(socratic_swirl_exercise = e$row)
     # Reset attempts counter, since correct
     e$attempts <- 1
   } else {
@@ -192,12 +198,20 @@ testResponse.default <- function(current.row, e){
     temp <- current.row[,"Hint"]
     # Suppress extra space if multiple choice
     is_mult <- is(e$current.row, "mult_question")
+    
     # If hint is specified, print it. Otherwise, just skip a line.
     if (!is.na(temp)) {
       swirl_out(current.row[,"Hint"], skip_after=!is_mult)
     } else {
       message()
     }
+    
+    # In case it is not a multiple choice question, output the question again.
+    if (!is_mult) {
+      swirl_out(e$current.row[,"Output"])
+      swirl_out("")
+    }
+    
     e$iptr <- e$iptr - 1
   }
 }
