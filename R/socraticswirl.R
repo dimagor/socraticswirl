@@ -4,12 +4,12 @@
 #
 # Validate a student to use the software for a class
 #
-socratic_swirl_init <- function(id, app, api, instance = "prod") {
+socratic_swirl_init <- function(id, app, api, instructor, instance = "prod") {
   Sys.setenv(PARSE_APPLICATION_ID = app, PARSE_API_KEY = api)
   if (is.null(parse_query("StudentList", email = id))) {
       print("Initialization failed, please make sure your ID and keys are correct.")
   } else {
-      saveRDS(c(id, app, api, instance), paste0(find.package("socraticswirl"), "/R/.userRDS"))
+      saveRDS(c(id, app, api, instance, instructor), paste0(find.package("socraticswirl"), "/R/.userRDS"))
       print("Initialization completed.")
   }
 }      
@@ -75,7 +75,7 @@ socratic_swirl_acl <- function() {
 #' @import rparse
 #' 
 #' @export
-socratic_swirl <- function(course, lesson, student, instructor = "<socraticswirl instructorID>", instance = "prod") {
+socratic_swirl <- function(course, lesson, student, instance = "prod") {
     
 # For a working version:
 # 1. Replace <socraticswirl instructorID> with the username of an instructor
@@ -119,6 +119,7 @@ socratic_swirl <- function(course, lesson, student, instructor = "<socraticswirl
   }
 
   # check the instructor
+  instructor <- obj[5]
   instructor_user <- parse_query("_User", username = instructor)
   if (is.null(instructor_user)) {
     stop("Instructor ", instructor, " not found")
