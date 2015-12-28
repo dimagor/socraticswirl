@@ -10,7 +10,7 @@ To install the package, copy and paste the following into your R terminal:
     devtools::install_github(c("dgrtwo/rparse", "dimagor/socraticswirl"))
 
 
-Your instructor will provide your the application key, REST API key and instructor ID. Then, you need to initialize the SocraticSwirl software once in R or RStudio. Suppose you already have the application key, api key and id,
+Your instructor will provide you the application key, REST API key and instructor ID. Then, you need to initialize the SocraticSwirl software once in R or RStudio. Suppose you already have the application key, api key and id,
 ``` r
 appkey <- “cut-and-paste your application key”
 apikey <- “cut-and-paste your api key”
@@ -23,9 +23,7 @@ To initialize your copy of SocraticSwirl, please type:
 library(socraticswirl)
 socratic_swirl_init(id, appkey, apikey, instructor)
 ```
-You should see "Initialization completed.", which indicate the initialization process succeeded.
-
-
+You should see "Initialization completed.", which indicate the initialization process succeeded. You only need to initialize once, as long as the keys and the instructor are not changed.
 
 Your instructor will also give you a line of code to run within your R terminal, which will register your SocraticSwirl session so that it knows what course and lesson you are taking and who your instructor is. With course_name, lesson_name and your_id you already have, it will look something like this:
 ``` r
