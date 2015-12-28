@@ -23,7 +23,7 @@ To initialize your copy of SocraticSwirl, please type:
 library(socraticswirl)
 socratic_swirl_init(id, appkey, apikey, instructor)
 ```
-You should see "Initialization completed.", which indicate the initialization process succeeded. You only need to initialize once, as long as the keys and the instructor are not changed.
+You should see "Initialization completed.", which indicates the initialization process succeeded. You only need to initialize once, as long as the keys and the instructor are not changed.
 
 Your instructor will also give you a line of code to run within your R terminal, which will register your SocraticSwirl session so that it knows what course and lesson you are taking and who your instructor is. With course_name, lesson_name and your_id you already have, it will look something like this:
 ``` r
