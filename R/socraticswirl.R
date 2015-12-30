@@ -1,9 +1,19 @@
 # This contains functions for uploading exercise results to
 # SocraticSwirl servers.
 
-#
-# Validate a student to use the software for a class
-#
+#' Initiation of socraticswirl
+#' 
+#' Run this to validate a student to use the software for a class. Only once is needed,
+#' before using the \code{\link{socratic_swirl}} function.
+#' 
+#' @param id student's email
+#' @param app app key 
+#' @param api api key
+#' @param instructor instructor's name
+#' 
+#' @import rparse
+#' 
+#' @export
 socratic_swirl_init <- function(id, app, api, instructor, instance = "prod") {
   Sys.setenv(PARSE_APPLICATION_ID = app, PARSE_API_KEY = api)
   if (is.null(parse_query("StudentList", email = id))) {
