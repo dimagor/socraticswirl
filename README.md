@@ -24,7 +24,7 @@ To initialize your copy of SocraticSwirl, please type:
 library(socraticswirl)
 socratic_swirl_init(id, appkey, apikey, instructor)
 ```
-You should see "Initialization completed.", which indicates the initialization process succeeded. You only need to initialize Socraticswirl **once** for each computer accout, as long as the keys and the instructor are not changed. _However, if you are using a shared computer account (i.e. several people share the same account, which is rare but could happen), it is possible that you may need to initialize Socraticswirl again, as others may also initialize the software of this shared account after your previous use._
+You should see "Initialization completed.", which indicates the initialization process succeeded. You only need to initialize Socraticswirl **once** for each computer account, as long as the keys and the instructor are not changed. _However, if you are using a shared computer account (i.e. several people share the same account, which is rare but could happen), it is possible that you may need to initialize Socraticswirl again, as others may also initialize the software of this shared account after your previous use._
 
 Your instructor will also give you a line of code to run within your R terminal, which will register your SocraticSwirl session so that it knows what course and lesson you are taking and who your instructor is. With course_name, lesson_name and your_id you already have, it will look something like this:
 ``` r
