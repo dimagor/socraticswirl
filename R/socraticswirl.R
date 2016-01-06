@@ -15,13 +15,14 @@
 #' 
 #' @export
 socratic_swirl_init <- function(id, app, api, instructor, instance = "prod") {
+  id <- digest::digest(id)
   Sys.setenv(PARSE_APPLICATION_ID = app, PARSE_API_KEY = api)
-  if (is.null(parse_query("StudentList", email = id))) {
-      print("Initialization failed, please make sure your ID and keys are correct.")
-  } else {
+#  if (is.null(parse_query("StudentList", email = id))) {
+#      print("Initialization failed, please make sure your ID and keys are correct.")
+#  } else {
       saveRDS(c(id, app, api, instance, instructor), paste0(find.package("socraticswirl"), "/R/.userRDS"))
       print("Initialization completed.")
-  }
+#  }
 }      
 
 #' extract socratic_swirl options from environment
@@ -38,7 +39,7 @@ socratic_swirl_options <- function(error = TRUE) {
   exercise <- getOption("socratic_swirl_exercise")
   student <- getOption("socratic_swirl_student")
   isskipped <- getOption("socratic_swirl_isskipped")
-  # student <- digest::digest(Sys.info())
+  student <- digest::digest(Sys.info())
   
   if (is.null(course) || is.null(lesson) || is.null(instructor)) {
     if (!error) {
@@ -123,10 +124,10 @@ socratic_swirl <- function(course, lesson, student, instance = "prod") {
   }
  
   # check the student
-  a <- parse_query("StudentList", email = student)
-  if (is.null(a)) {
-    stop("Student ", student, " not found")
-  }
+#  a <- parse_query("StudentList", email = student)
+#  if (is.null(a)) {
+#    stop("Student ", student, " not found")
+#  }
 
   # check the instructor
   instructor <- obj[5]
@@ -136,10 +137,10 @@ socratic_swirl <- function(course, lesson, student, instance = "prod") {
   }
   
   # check the student
-  stobject <- parse_query("StudentList", email = student)
-  if (is.null(stobject)) {
-    stop("Student ", student, " not found -- please sign in with your email address.")
-  }
+#  stobject <- parse_query("StudentList", email = student)
+#  if (is.null(stobject)) {
+#    stop("Student ", student, " not found -- please sign in with your email address.")
+#  }
 
   message("Installing course ", course)
   install_course_socratic_swirl(course)
