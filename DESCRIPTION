@@ -1,7 +1,7 @@
 Package: socraticswirl
 Title: Learn R With Interactive In-class Examples
 Description: Let students be prompted with in-class questions in their
-  R terminal, and update their instructor in real time.
+    R terminal, and update their instructor in real time.
 URL: http://socraticswirl.org
 Version: 0.0.9000
 License: GPL-3
@@ -13,9 +13,9 @@ Authors@R: c(
     person("Gina", "Grdina", role = "aut"),
     person("Sean", "Kross", role = "aut")
     )
-Depends: 
+Depends:
     R (>= 3.0.2)
-Imports: 
+Imports:
     rparse,
     stringr,
     testthat,
@@ -25,6 +25,8 @@ Imports:
     digest,
     tools
 Roxygen: list(wrap = FALSE)
-Suggests: knitr,
-  socraticswirlInstructor
+Suggests:
+    knitr,
+    socraticswirlInstructor
 VignetteBuilder: knitr
+RoxygenNote: 5.0.1

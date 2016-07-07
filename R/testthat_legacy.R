@@ -20,6 +20,12 @@ expectation_legacy <- function(passed, failure_msg,
   )
 }
 
+#' equals_legacy
+#'
+#' @param expected expected 
+#' @param label label
+#' @param ... rest
+#'
 #' @importFrom testthat compare
 equals_legacy <- function(expected, label = NULL, ...) {
   if (is.null(label)) {
