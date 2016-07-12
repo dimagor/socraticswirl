@@ -11,6 +11,13 @@ devtools::install_github("dgrtwo/rparse")
 devtools::install_github("dimagor/socraticswirl", ref="socraticswirl")
 ```
 
+Socraticswirl may not work with newer version of testthat, so you may need to install the version we know that will works:
+
+``` r
+require(devtools)
+install_version("testthat", version = "0.11.0", repos = "http://cran.us.r-project.org")
+```
+
 Your instructor will provide you the application key, REST API key and instructor ID. Then, you need to initialize the SocraticSwirl software once in R or RStudio. Suppose you already have the application key, api key and id,
 ``` r
 appkey <- “cut-and-paste your application key”
