@@ -17,6 +17,7 @@ Depends:
     R (>= 3.0.2)
 Imports:
     rparse,
+    stringi,
     stringr,
     testthat,
     httr,
